@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>多媒体展示平台</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#165DFF',
+            secondary: '#36CBCB',
+            dark: '#1D2939',
+            light: '#F9FAFB'
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      }
+      .bg-blur {
+        backdrop-filter: blur(8px);
+      }
+      .video-card-hover {
+        @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+      }
+      .modal-transition {
+        @apply transition-opacity duration-300 ease-in-out;
+      }
+      .play-button-animation {
+        @apply transition-transform duration-500 hover:scale-110;
+      }
+      .gallery-item-hover {
+        @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-2;
+      }
+      .image-zoom {
+        @apply transition-transform duration-300;
+      }
+    }
+  </style>
+</head>
+<body class="font-inter bg-light text-dark min-h-screen flex flex-col">
+  <!-- 导航栏 -->
+  <header class="bg-white/80 bg-blur shadow-md sticky top-0 z-50 transition-all duration-300" id="navbar">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <i class="fa fa-play-circle text-primary text-2xl"></i>
+        <h1 class="text-xl font-bold text-primary">多媒体展示平台</h1>
+      </div>
+      <nav class="hidden md:flex space-x-6">
+        <a href="#home" class="text-dark hover:text-primary transition-colors font-medium">首页</a>
+        <a href="#videos" class="text-dark hover:text-primary transition-colors font-medium">视频</a>
+        <a href="#gallery" class="text-dark hover:text-primary transition-colors font-medium">图片</a>
+      </nav>
+      <button class="md:hidden text-dark" id="mobile-menu-button">
+        <i class="fa fa-bars text-2xl"></i>
+      </button>
+    </div>
+    <!-- 移动端菜单 -->
+    <div class="md:hidden hidden bg-white border-t" id="mobile-menu">
+      <div class="container mx-auto px-4 py-2 flex flex-col space-y-3">
+        <a href="#home" class="text-dark hover:text-primary transition-colors py-2 font-medium">首页</a>
+        <a href="#videos" class="text-dark hover:text-primary transition-colors py-2 font-medium">视频</a>
+        <a href="#gallery" class="text-dark hover:text-primary transition-colors py-2 font-medium">图片</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 首页 -->
+  <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <img src="https://picsum.photos/id/1015/1920/1080" alt="公司全景" class="w-full h-full object-cover">
+      <div class="absolute inset-0 bg-gradient-to-b from-black/60 to-black/30"></div>
+    </div>
+    <div class="container mx-auto px-4 z-10 text-center">
+      <h1 class="text-[clamp(2.5rem,6vw,4.5rem)] font-bold text-white mb-6 text-shadow animate-fadeIn">
+        探索多媒体世界
+      </h1>
+      <p class="text-[clamp(1rem,2vw,1.5rem)] text-white/90 max-w-3xl mx-auto mb-10 text-shadow">
+        我们提供高质量的视频和图片内容，展示最新的产品和服务
+      </p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="#videos" class="px-8 py-3 bg-primary hover:bg-primary/90 text-white rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+          浏览视频
+        </a>
+        <a href="#gallery" class="px-8 py-3 bg-white/10 hover:bg-white/20 text-white border border-white/30 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+          查看图片
+        </a>
+      </div>
+    </div>
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <a href="#videos" class="text-white text-3xl opacity-80 hover:opacity-100 transition-opacity">
+        <i class="fa fa-chevron-down"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- 视频页 -->
+  <section id="videos" class="py-20 bg-light">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold mb-4">精选视频</h2>
+        <p class="text-gray-600 max-w-3xl mx-auto">浏览我们精心制作的视频内容，了解我们的产品和服务</p>
+      </div>
+      
+      <!-- 视频筛选 -->
+      <div class="flex flex-wrap justify-center gap-3 mb-12">
+        <button class="filter-btn active px-5 py-2.5 rounded-full bg-primary text-white shadow-md hover:bg-primary/90 transition-colors">
+          全部视频
+        </button>
+        <button class="filter-btn px-5 py-2.5 rounded-full bg-gray-200 text-dark shadow hover:bg-gray-300 transition-colors">
+          产品介绍
+        </button>
+        <button class="filter-btn px-5 py-2.5 rounded-full bg-gray-200 text-dark shadow hover:bg-gray-300 transition-colors">
+          技术演示
+        </button>
+        <button class="filter-btn px-5 py-2.5 rounded-full bg-gray-200 text-dark shadow hover:bg-gray-300 transition-colors">
+          客户案例
+        </button>
+      </div>
+      
+      <!-- 视频网格 -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="video-grid">
+        <!-- 视频卡片将通过JavaScript动态生成 -->
+      </div>
+      
+      <!-- 加载更多按钮 -->
+      <div class="text-center mt-16">
+        <button id="load-more-videos" class="px-8 py-3 bg-white border-2 border-primary text-primary rounded-full font-medium hover:bg-primary/5 transition-colors shadow-md">
+          <i class="fa fa-refresh mr-2"></i>加载更多视频
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 图片页 -->
+  <section id="gallery" class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold mb-4">精彩图片</h2>
+        <p class="text-gray-600 max-w-3xl mx-auto">探索我们精心拍摄的图片集，展示产品细节和应用场景</p>
+      </div>
+      
+      <!-- 图片筛选 -->
+      <div class="flex flex-wrap justify-center gap-3 mb-12">
+        <button class="filter-btn active px-5 py-2.5 rounded-full bg-primary text-white shadow-md hover:bg-primary/90 transition-colors">
+          全部图片
+        </button>
+        <button class="filter-btn px-5 py-2.5 rounded-full bg-gray-200 text-dark shadow hover:bg-gray-300 transition-colors">
+          产品图片
+        </button>
+        <button class="filter-btn px-5 py-2.5 rounded-full bg-gray-200 text-dark shadow hover:bg-gray-300 transition-colors">
+          应用场景
+        </button>
+        <button class="filter-btn px-5 py-2.5 rounded-full bg-gray-200 text-dark shadow hover:bg-gray-300 transition-colors">
+          团队风采
+        </button>
+      </div>
+      
+      <!-- 图片网格 -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="gallery-grid">
+        <!-- 图片卡片将通过JavaScript动态生成 -->
+      </div>
+      
+      <!-- 加载更多按钮 -->
+      <div class="text-center mt-16">
+        <button id="load-more-images" class="px-8 py-3 bg-white border-2 border-primary text-primary rounded-full font-medium hover:bg-primary/5 transition-colors shadow-md">
+          <i class="fa fa-refresh mr-2"></i>加载更多图片
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="bg-dark text-white py-16">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
+        <div>
+          <div class="flex items-center space-x-2 mb-6">
+            <i class="fa fa-play-circle text-primary text-2xl"></i>
+            <span class="text-xl font-bold">多媒体展示平台</span>
+          </div>
+          <p class="text-gray-400 mb-6">探索精彩视频和图片内容，了解我们的产品和服务</p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fa fa-facebook"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fa fa-twitter"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fa fa-instagram"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fa fa-youtube-play"></i></a>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold mb-6">快速链接</h3>
+          <ul class="space-y-3">
+            <li><a href="#home" class="text-gray-400 hover:text-white transition-colors">首页</a></li>
+            <li><a href="#videos" class="text-gray-400 hover:text-white transition-colors">视频</a></li>
+            <li><a href="#gallery" class="text-gray-400 hover:text-white transition-colors">图片</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">关于我们</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">联系我们</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold mb-6">联系方式</h3>
+          <ul class="space-y-3">
+            <li class="flex items-start space-x-3">
+              <i class="fa fa-map-marker text-primary mt-1"></i>
+              <span class="text-gray-400">北京市海淀区科技园区88号</span>
+            </li>
+            <li class="flex items-center space-x-3">
+              <i class="fa fa-phone text-primary"></i>
+              <span class="text-gray-400">+86 10 8888 8888</span>
+            </li>
+            <li class="flex items-center space-x-3">
+              <i class="fa fa-envelope text-primary"></i>
+              <span class="text-gray-400">contact@example.com</span>
+            </li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold mb-6">订阅更新</h3>
+          <p class="text-gray-400 mb-4">订阅我们的通讯，获取最新的视频和图片内容</p>
+          <form class="flex">
+            <input type="email" placeholder="您的邮箱地址" class="px-4 py-2 rounded-l-full bg-gray-800 border-0 focus:outline-none focus:ring-2 focus:ring-primary text-white w-full">
+            <button type="submit" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-r-full transition-colors">
+              <i class="fa fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500 text-sm">
+        <p>&copy; 2025 多媒体展示平台. 保留所有权利.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 视频播放模态框 -->
+  <div id="video-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center modal-transition opacity-0 pointer-events-none">
+    <div class="relative w-full max-w-4xl max-h-[90vh]">
+      <button id="close-modal" class="absolute top-4 right-4 text-white text-2xl z-10 hover:text-gray-300 transition-colors">
+        <i class="fa fa-times"></i>
+      </button>
+      
+      <!-- 视频播放器 -->
+      <div class="aspect-video bg-black">
+        <video id="video-player" class="w-full h-full object-cover" controls>
+          您的浏览器不支持视频播放
+        </video>
+      </div>
+      
+      <!-- 视频信息 -->
+      <div class="bg-white p-6 mt-4 rounded-lg shadow-2xl">
+        <h3 id="modal-title" class="text-xl font-bold mb-2">视频标题</h3>
+        <p id="modal-description" class="text-gray-600 mb-4">视频描述</p>
+        <div class="flex flex-wrap gap-2">
+          <span id="modal-date" class="text-sm text-gray-500"><i class="fa fa-calendar mr-1"></i> 日期</span>
+          <span id="modal-duration" class="text-sm text-gray-500"><i class="fa fa-clock-o mr-1"></i> 时长</span>
+          <span id="modal-views" class="text-sm text-gray-500"><i class="fa fa-eye mr-1"></i> 观看次数</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 图片查看模态框 -->
+  <div id="image-modal" class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center modal-transition opacity-0 pointer-events-none">
+    <div class="relative w-full max-w-5xl">
+      <div class="absolute top-4 right-4 flex space-x-3 z-10">
+        <button id="prev-image" class="bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors">
+          <i class="fa fa-chevron-left"></i>
+        </button>
+        <button id="toggle-fullscreen" class="bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors">
+          <i class="fa fa-expand"></i>
+        </button>
+        <button id="close-image-modal" class="bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+      
+      <!-- 图片导航 -->
+      <button id="nav-left" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-4 rounded-full transition-colors">
+        <i class="fa fa-chevron-left text-xl"></i>
+      </button>
+      <button id="nav-right" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-4 rounded-full transition-colors">
+        <i class="fa fa-chevron-right text-xl"></i>
+      </button>
+      
+      <!-- 图片查看器 -->
+      <div class="bg-black rounded-lg overflow-hidden shadow-2xl">
+        <img id="modal-image" src="" alt="大图预览" class="max-h-[80vh] mx-auto image-zoom">
+      </div>
+      
+      <!-- 图片信息 -->
+      <div class="bg-white p-6 mt-4 rounded-lg shadow-2xl">
+        <div class="flex justify-between items-center">
+          <div>
+            <h3 id="image-title" class="text-xl font-bold mb-1">图片标题</h3>
+            <p id="image-description" class="text-gray-600">图片描述</p>
+          </div>
+          <div class="flex space-x-2">
+            <span id="image-index" class="text-gray-500">1/6</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 视频数据配置
+    const videoData = [
+      {
+        id: 1,
+        title: "新产品发布会",
+        description: "我们最新产品的详细介绍，展示了产品的主要功能和创新点。",
+        thumbnail: "https://picsum.photos/id/96/800/450",
+        duration: "03:45",
+        date: "2025-06-10",
+        views: "12,543",
+        category: "产品介绍",
+        videoUrl: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
+      },
+      {
+        id: 2,
+        title: "技术实现详解",
+        description: "技术团队为您演示产品的底层技术实现和性能优化方案。",
+        thumbnail: "https://picsum.photos/id/237/800/450",
+        duration: "05:20",
+        date: "2025-06-05",
+        views: "8,762",
+        category: "技术演示",
+        videoUrl: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
+      },
+      {
+        id: 3,
+        title: "客户成功案例",
+        description: "我们的客户分享他们使用产品的成功案例，展示产品如何帮助他们解决实际问题。",
+        thumbnail: "https://picsum.photos/id/180/800/450",
+        duration: "07:15",
+        date: "2025-05-28",
+        views: "6,329",
+        category: "客户案例",
+        videoUrl: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
+      },
+      {
+        id: 4,
+        title: "功能更新演示",
+        description: "最新版本的功能更新介绍，新增功能和改进点的详细演示。",
+        thumbnail: "https://picsum.photos/id/1/800/450",
+        duration: "04:10",
+        date: "2025-06-01",
+        views: "5,890",
+        category: "产品介绍",
+        videoUrl: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
+      },
+      {
+        id: 5,
+        title: "行业解决方案",
+        description: "针对不同行业的解决方案演示，展示产品如何满足各行业的特定需求。",
+        thumbnail: "https://picsum.photos/id/20/800/450",
+        duration: "06:30",
+        date: "2025-05-15",
+        views: "4,251",
+        category: "技术演示",
+        videoUrl: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
+      },
+      {
+        id: 6,
+        title: "用户使用指南",
+        description: "详细指导您如何正确使用我们的产品，从入门到精通的全方位指南。",
+        thumbnail: "https://picsum.photos/id/91/800/450",
+        duration: "05:15",
+        date: "2025-05-10",
+        views: "7,124",
+        category: "产品介绍",
+        videoUrl: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
+      }
+    ];
+
+    // 图片数据配置
+    const imageData = [
+      {
+        id: 1,
+        title: "产品全景展示",
+        description: "我们最新产品的全景展示，呈现了产品的整体外观和设计理念。",
+        thumbnail: "https://picsum.photos/id/26/800/600",
+        fullsize: "https://picsum.photos/id/26/1200/800",
+        category: "产品图片"
+      },
+      {
+        id: 2,
+        title: "产品细节特写",
+        description: "产品关键部件的细节特写，展示了精湛的工艺和品质。",
+        thumbnail: "https://picsum.photos/id/42/800/600",
+        fullsize: "https://picsum.photos/id/42/1200/800",
+        category: "产品图片"
+      },
+      {
+        id: 3,
+        title: "实际应用场景",
+        description: "产品在实际工作环境中的应用场景，展示了产品的实用性和价值。",
+        thumbnail: "https://picsum.photos/id/28/800/600",
+        fullsize: "https://picsum.photos/id/28/1200/800",
+        category: "应用场景"
+      },
+      {
+        id: 4,
+        title: "团队协作场景",
+        description: "我们的团队在工作中的协作场景，展示了高效的工作流程和团队精神。",
+        thumbnail: "https://picsum.photos/id/110/800/600",
+        fullsize: "https://picsum.photos/id/110/1200/800",
+        category: "团队风采"
+      },
+      {
+        id: 5,
+        title: "产品功能演示",
+        description: "产品主要功能的演示图片，直观展示了产品的操作流程和效果。",
+        thumbnail: "https://picsum.photos/id/119/800/600",
+        fullsize: "https://picsum.photos/id/119/1200/800",
+        category: "产品图片"
+      },
+      {
+        id: 6,
+        title: "客户应用案例",
+        description: "客户使用我们产品的成功案例展示，展示了产品在不同行业的应用效果。",
+        thumbnail: "https://picsum.photos/id/133/800/600",
+        fullsize: "https://picsum.photos/id/133/1200/800",
+        category: "应用场景"
+      },
+      {
+        id: 7,
+        title: "客户应用案例",
+        description: "客户使用我们产品的成功案例展示，展示了产品在不同行业的应用效果。",
+        thumbnail: "https://picsum.photos/id/133/800/600",
+        fullsize: "https://picsum.photos/id/133/1200/800",
+        category: "应用场景"
+      },
+      {
+        id: 8,
+        title: "客户应用案例",
+        description: "客户使用我们产品的成功案例展示，展示了产品在不同行业的应用效果。",
+        thumbnail: "https://picsum.photos/id/133/800/600",
+        fullsize: "https://picsum.photos/id/133/1200/800",
+        category: "应用场景"
+      },
+      {
+        id: 9,
+        title: "客户应用案例",
+        description: "客户使用我们产品的成功案例展示，展示了产品在不同行业的应用效果。",
+        thumbnail: "https://picsum.photos/id/133/800/600",
+        fullsize: "https://picsum.photos/id/133/1200/800",
+        category: "应用场景"
+      },
+      {
+        id: 10,
+        title: "客户应用案例",
+        description: "客户使用我们产品的成功案例展示，展示了产品在不同行业的应用效果。",
+        thumbnail: "https://picsum.photos/id/133/800/600",
+        fullsize: "https://picsum.photos/id/133/1200/800",
+        category: "应用场景"
+      },
+      {
+        id: 11,
+        title: "客户应用案例",
+        description: "客户使用我们产品的成功案例展示，展示了产品在不同行业的应用效果。",
+        thumbnail: "https://picsum.photos/id/133/800/600",
+        fullsize: "https://picsum.photos/id/133/1200/800",
+        category: "应用场景"
+      }
+    ];
+
+    // 当前选中的图片索引
+    let currentImageIndex = 0;
+
+    // 视频和图片当前展示数量
+    let currentVideoCount = 6;
+    let currentImageCount = 6;
+
+    // DOM元素
+    const videoGrid = document.getElementById('video-grid');
+    const galleryGrid = document.getElementById('gallery-grid');
+    const videoModal = document.getElementById('video-modal');
+    const closeModal = document.getElementById('close-modal');
+    const videoPlayer = document.getElementById('video-player');
+    const imageModal = document.getElementById('image-modal');
+    const closeImageModal = document.getElementById('close-image-modal');
+    const modalImage = document.getElementById('modal-image');
+    const toggleFullscreen = document.getElementById('toggle-fullscreen');
+    const navLeft = document.getElementById('nav-left');
+    const navRight = document.getElementById('nav-right');
+    const prevImage = document.getElementById('prev-image');
+    const nextImage = document.getElementById('nav-right');
+    const imageTitle = document.getElementById('image-title');
+    const imageDescription = document.getElementById('image-description');
+    const imageIndex = document.getElementById('image-index');
+
+    // 导航栏滚动效果
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('py-2', 'shadow-lg');
+        navbar.classList.remove('py-3', 'shadow-md');
+      } else {
+        navbar.classList.add('py-3', 'shadow-md');
+        navbar.classList.remove('py-2', 'shadow-lg');
+      }
+    });
+
+    // 移动端菜单切换
+    document.getElementById('mobile-menu-button').addEventListener('click', () => {
+      const mobileMenu = document.getElementById('mobile-menu');
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // 平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          // 关闭移动菜单（如果打开）
+          document.getElementById('mobile-menu').classList.add('hidden');
+          
+          // 滚动到目标位置
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // 渲染视频卡片
+    function renderVideos(videos) {
+      videoGrid.innerHTML = videos.length > 0 ? '' : `
+        <div class="col-span-full text-center py-16">
+          <i class="fa fa-film text-gray-300 text-6xl mb-4"></i>
+          <p class="text-gray-500">未找到视频文件</p>
+        </div>
+      `;
+      
+      videos.forEach(video => {
+        const videoCard = document.createElement('div');
+        videoCard.className = 'video-card-hover bg-white rounded-xl overflow-hidden shadow-md';
+        videoCard.innerHTML = `
+          <div class="relative aspect-video">
+            <img src="${video.thumbnail}" alt="${video.title}" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
+              <button class="play-button-animation bg-primary/80 hover:bg-primary text-white w-16 h-16 rounded-full flex items-center justify-center">
+                <i class="fa fa-play text-2xl"></i>
+              </button>
+            </div>
+            <span class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">${video.duration}</span>
+          </div>
+          <div class="p-6">
+            <h3 class="font-semibold text-xl mb-2">${video.title}</h3>
+            <p class="text-gray-600 mb-4">${video.description}</p>
+            <div class="flex justify-between items-center text-sm text-gray-500">
+              <span><i class="fa fa-calendar mr-1"></i> ${video.date}</span>
+              <span><i class="fa fa-eye mr-1"></i> ${video.views} 次观看</span>
+            </div>
+          </div>
+        `;
+        
+        // 点击卡片打开视频模态框
+        videoCard.addEventListener('click', () => {
+          document.getElementById('modal-title').textContent = video.title;
+          document.getElementById('modal-description').textContent = video.description;
+          document.getElementById('modal-date').innerHTML = `<i class="fa fa-calendar mr-1"></i> ${video.date}`;
+          document.getElementById('modal-duration').innerHTML = `<i class="fa fa-clock-o mr-1"></i> ${video.duration}`;
+          document.getElementById('modal-views').innerHTML = `<i class="fa fa-eye mr-1"></i> ${video.views} 次观看`;
+          
+          videoPlayer.src = video.videoUrl;
+          
+          videoModal.classList.remove('opacity-0', 'pointer-events-none');
+          document.body.style.overflow = 'hidden';
+          
+          // 视频加载完成后自动播放
+          videoPlayer.onloadedmetadata = () => {
+            videoPlayer.play().catch(e => console.log('自动播放被阻止:', e));
+          };
+        });
+        
+        videoGrid.appendChild(videoCard);
+      });
+    }
+
+    // 渲染图片卡片
+    function renderImages(images) {
+      galleryGrid.innerHTML = images.length > 0 ? '' : `
+        <div class="col-span-full text-center py-16">
+          <i class="fa fa-picture-o text-gray-300 text-6xl mb-4"></i>
+          <p class="text-gray-500">未找到图片</p>
+        </div>
+      `;
+      
+      images.forEach((image, index) => {
+        const imageCard = document.createElement('div');
+        imageCard.className = 'gallery-item-hover rounded-xl overflow-hidden bg-white shadow-md';
+        imageCard.innerHTML = `
+          <div class="relative">
+            <img src="${image.thumbnail}" alt="${image.title}" class="w-full h-64 object-cover">
+            <div class="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+              <button class="bg-white text-primary rounded-full p-3 transform translate-y-4 hover:translate-y-0 transition-transform">
+                <i class="fa fa-search-plus text-xl"></i>
+              </button>
+            </div>
+          </div>
+          <div class="p-5">
+            <h3 class="font-semibold text-lg mb-2">${image.title}</h3>
+            <p class="text-gray-600 text-sm">${image.description}</p>
+          </div>
+        `;
+        
+        // 点击卡片打开图片模态框
+        imageCard.addEventListener('click', () => {
+          openImageModal(index);
+        });
+        
+        galleryGrid.appendChild(imageCard);
+      });
+    }
+
+    // 打开图片模态框
+    function openImageModal(index) {
+      currentImageIndex = index;
+      const image = imageData[currentImageIndex];
+      
+      imageTitle.textContent = image.title;
+      imageDescription.textContent = image.description;
+      modalImage.src = image.fullsize;
+      imageIndex.textContent = `${currentImageIndex + 1}/${imageData.length}`;
+      
+      imageModal.classList.remove('opacity-0', 'pointer-events-none');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // 切换到上一张图片
+    function prevImageHandler() {
+      currentImageIndex = (currentImageIndex - 1 + imageData.length) % imageData.length;
+      updateImageModal();
+    }
+
+    // 切换到下一张图片
+    function nextImageHandler() {
+      currentImageIndex = (currentImageIndex + 1) % imageData.length;
+      updateImageModal();
+    }
+
+    // 更新图片模态框内容
+    function updateImageModal() {
+      const image = imageData[currentImageIndex];
+      
+      imageTitle.textContent = image.title;
+      imageDescription.textContent = image.description;
+      modalImage.src = ''; // 重置src以触发加载动画
+      modalImage.src = image.fullsize;
+      imageIndex.textContent = `${currentImageIndex + 1}/${imageData.length}`;
+      
+      // 添加淡入效果
+      modalImage.classList.add('opacity-0');
+      setTimeout(() => {
+        modalImage.classList.remove('opacity-0');
+      }, 50);
+    }
+
+    // 切换全屏模式
+    function toggleFullscreenHandler() {
+      const fullscreenElement = document.fullscreenElement || 
+                                document.webkitFullscreenElement || 
+                                document.mozFullScreenElement || 
+                                document.msFullscreenElement;
+      
+      if (!fullscreenElement) {
+        // 进入全屏
+        const image = document.getElementById('modal-image'); // 直接全屏图片元素
+        if (image.requestFullscreen) {
+          image.requestFullscreen();
+        } else if (image.webkitRequestFullscreen) {
+          image.webkitRequestFullscreen();
+        } else if (image.mozRequestFullScreen) {
+          image.mozRequestFullScreen();
+        } else if (image.msRequestFullscreen) {
+          image.msRequestFullscreen();
+        }
+        toggleFullscreen.innerHTML = '<i class="fa fa-compress"></i>';
+      } else {
+        // 退出全屏
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+        toggleFullscreen.innerHTML = '<i class="fa fa-expand"></i>';
+      }
+    }
+
+    // 视频筛选按钮
+    document.querySelectorAll('#videos .filter-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        // 移除所有按钮的活跃状态
+        document.querySelectorAll('#videos .filter-btn').forEach(btn => {
+          btn.classList.remove('active', 'bg-primary', 'text-white');
+          btn.classList.add('bg-gray-200', 'text-dark');
+        });
+        
+        // 添加当前按钮的活跃状态
+        button.classList.add('active', 'bg-primary', 'text-white');
+        button.classList.remove('bg-gray-200', 'text-dark');
+        
+        // 筛选视频
+        const filter = button.textContent.trim();
+        let filteredVideos = videoData;
+        
+        if (filter !== '全部视频') {
+          filteredVideos = videoData.filter(video => video.category === filter);
+        }
+
+        currentVideoCount = 6;
+        renderVideos(filteredVideos.slice(0, currentVideoCount));
+        if (filteredVideos.length <= currentVideoCount) {
+          document.getElementById('load-more-videos').style.display = 'none';
+        } else {
+          document.getElementById('load-more-videos').style.display = 'inline-block';
+        }
+      });
+    });
+
+    // 图片筛选按钮
+    document.querySelectorAll('#gallery .filter-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        // 移除所有按钮的活跃状态
+        document.querySelectorAll('#gallery .filter-btn').forEach(btn => {
+          btn.classList.remove('active', 'bg-primary', 'text-white');
+          btn.classList.add('bg-gray-200', 'text-dark');
+        });
+        
+        // 添加当前按钮的活跃状态
+        button.classList.add('active', 'bg-primary', 'text-white');
+        button.classList.remove('bg-gray-200', 'text-dark');
+        
+        // 筛选图片
+        const filter = button.textContent.trim();
+        let filteredImages = imageData;
+        
+        if (filter !== '全部图片') {
+          filteredImages = imageData.filter(image => image.category === filter);
+        }
+
+        currentImageCount = 6;
+        renderImages(filteredImages.slice(0, currentImageCount));
+        if (filteredImages.length <= currentImageCount) {
+          document.getElementById('load-more-images').style.display = 'none';
+        } else {
+          document.getElementById('load-more-images').style.display = 'inline-block';
+        }
+      });
+    });
+
+    // 关闭视频模态框
+    closeModal.addEventListener('click', () => {
+      videoModal.classList.add('opacity-0', 'pointer-events-none');
+      document.body.style.overflow = '';
+      videoPlayer.pause();
+      videoPlayer.src = '';
+    });
+    
+    // 点击模态框背景关闭
+    videoModal.addEventListener('click', (e) => {
+      if (e.target === videoModal) {
+        closeModal.click();
+      }
+    });
+
+    // 关闭图片模态框
+    closeImageModal.addEventListener('click', () => {
+      imageModal.classList.add('opacity-0', 'pointer-events-none');
+      document.body.style.overflow = '';
+      
+      // 确保退出全屏
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+      toggleFullscreen.innerHTML = '<i class="fa fa-expand"></i>';
+    });
+    
+    // 点击模态框背景关闭
+    imageModal.addEventListener('click', (e) => {
+      if (e.target === imageModal) {
+        closeImageModal.click();
+      }
+    });
+
+    // 图片导航事件
+    prevImage.addEventListener('click', prevImageHandler);
+    navLeft.addEventListener('click', prevImageHandler);
+    nextImage.addEventListener('click', nextImageHandler);
+    navRight.addEventListener('click', nextImageHandler);
+    toggleFullscreen.addEventListener('click', toggleFullscreenHandler);
+
+    // 监听全屏状态变化
+    document.addEventListener('fullscreenchange', updateFullscreenButton);
+    document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
+    document.addEventListener('mozfullscreenchange', updateFullscreenButton);
+    document.addEventListener('MSFullscreenChange', updateFullscreenButton);
+
+    function updateFullscreenButton() {
+      const fullscreenElement = document.fullscreenElement || 
+                                document.webkitFullscreenElement || 
+                                document.mozFullScreenElement || 
+                                document.msFullscreenElement;
+      
+      toggleFullscreen.innerHTML = fullscreenElement ? 
+        '<i class="fa fa-compress"></i>' : 
+        '<i class="fa fa-expand"></i>';
+    }
+
+    // 键盘导航
+    document.addEventListener('keydown', (e) => {
+      if (!imageModal.classList.contains('opacity-0')) {
+        switch(e.key) {
+          case 'Escape':
+            closeImageModal.click();
+            break;
+          case 'ArrowLeft':
+            prevImageHandler();
+            break;
+          case 'ArrowRight':
+            nextImageHandler();
+            break;
+          case 'f':
+            toggleFullscreenHandler();
+            break;
+        }
+      }
+      
+      if (!videoModal.classList.contains('opacity-0')) {
+        if (e.key === 'Escape') {
+          closeModal.click();
+        }
+      }
+    });
+
+    // 图片加载完成事件
+    modalImage.addEventListener('load', () => {
+      modalImage.classList.remove('opacity-0');
+    });
+
+    // 加载更多视频按钮
+    document.getElementById('load-more-videos').addEventListener('click', () => {
+      const filteredVideos = document.querySelector('#videos .filter-btn.active').textContent.trim() === '全部视频' ? videoData : videoData.filter(video => video.category === document.querySelector('#videos .filter-btn.active').textContent.trim());
+      currentVideoCount += 3;
+      if (currentVideoCount >= filteredVideos.length) {
+        currentVideoCount = filteredVideos.length;
+        document.getElementById('load-more-videos').style.display = 'none';
+      }
+      renderVideos(filteredVideos.slice(0, currentVideoCount));
+    });
+
+    // 加载更多图片按钮
+    document.getElementById('load-more-images').addEventListener('click', () => {
+      const filteredImages = document.querySelector('#gallery .filter-btn.active').textContent.trim() === '全部图片' ? imageData : imageData.filter(image => image.category === document.querySelector('#gallery .filter-btn.active').textContent.trim());
+      currentImageCount += 3;
+      if (currentImageCount >= filteredImages.length) {
+        currentImageCount = filteredImages.length;
+        document.getElementById('load-more-images').style.display = 'none';
+      }
+      renderImages(filteredImages.slice(0, currentImageCount));
+    });
+
+    // 初始化页面
+    window.addEventListener('DOMContentLoaded', () => {
+      // 渲染视频和图片
+      renderVideos(videoData.slice(0, currentVideoCount));
+      renderImages(imageData.slice(0, currentImageCount));
+
+      if (videoData.length <= currentVideoCount) {
+        document.getElementById('load-more-videos').style.display = 'none';
+      }
+      if (imageData.length <= currentImageCount) {
+        document.getElementById('load-more-images').style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
