@@ -64,6 +64,7 @@
         <a href="#home" class="text-dark hover:text-primary transition-colors font-medium">首页</a>
         <a href="#videos" class="text-dark hover:text-primary transition-colors font-medium">视频</a>
         <a href="#gallery" class="text-dark hover:text-primary transition-colors font-medium">图片</a>
+		<a href="#audios" class="text-dark hover:text-primary transition-colors font-medium">音频</a>
       </nav>
       <button class="md:hidden text-dark" id="mobile-menu-button">
         <i class="fa fa-bars text-2xl"></i>
@@ -75,6 +76,7 @@
         <a href="#home" class="text-dark hover:text-primary transition-colors py-2 font-medium">首页</a>
         <a href="#videos" class="text-dark hover:text-primary transition-colors py-2 font-medium">视频</a>
         <a href="#gallery" class="text-dark hover:text-primary transition-colors py-2 font-medium">图片</a>
+		<a href="#audios" class="text-dark hover:text-primary transition-colors py-2 font-medium">音频</a>
       </div>
     </div>
   </header>
@@ -98,6 +100,9 @@
         </a>
         <a href="#gallery" class="px-8 py-3 bg-white/10 hover:bg-white/20 text-white border border-white/30 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
           查看图片
+        </a>
+		  <a href="#audios" class="px-8 py-3 bg-white/10 hover:bg-white/20 text-white border border-white/30 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+          收听音频
         </a>
       </div>
     </div>
@@ -183,6 +188,41 @@
       </div>
     </div>
   </section>
+  
+<!-- 音频页 -->
+  <section id="audios" class="py-20 bg-gray-100">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold mb-4">精彩音频</h2>
+        <p class="text-gray-600 max-w-3xl mx-auto">探索我们精心挑选的音频内容，感受声音的魅力</p>
+      </div>
+
+      <!-- 音频筛选 -->
+      <div class="flex flex-wrap justify-center gap-3 mb-12">
+        <button class="filter-btn active px-5 py-2.5 rounded-full bg-primary text-white shadow-md hover:bg-primary/90 transition-colors">
+          全部音频
+        </button>
+        <button class="filter-btn px-5 py-2.5 rounded-full bg-gray-200 text-dark shadow hover:bg-gray-300 transition-colors">
+          产品介绍音频
+        </button>
+        <button class="filter-btn px-5 py-2.5 rounded-full bg-gray-200 text-dark shadow hover:bg-gray-300 transition-colors">
+          宣传音频
+        </button>
+      </div>
+
+      <!-- 音频网格 -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="audio-grid">
+        <!-- 音频卡片将通过JavaScript动态生成 -->
+      </div>
+
+      <!-- 加载更多按钮 -->
+      <div class="text-center mt-16">
+        <button id="load-more-audios" class="px-8 py-3 bg-white border-2 border-primary text-primary rounded-full font-medium hover:bg-primary/5 transition-colors shadow-md">
+          <i class="fa fa-refresh mr-2"></i>加载更多音频
+        </button>
+      </div>
+    </div>
+  </section>
 
   <!-- 页脚 -->
   <footer class="bg-dark text-white py-16">
@@ -195,10 +235,7 @@
           </div>
           <p class="text-gray-400 mb-6">探索精彩视频和图片内容，了解我们的产品和服务</p>
           <div class="flex space-x-4">
-            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fa fa-facebook"></i></a>
-            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fa fa-twitter"></i></a>
-            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fa fa-instagram"></i></a>
-            <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fa fa-youtube-play"></i></a>
+           
           </div>
         </div>
         
@@ -208,8 +245,6 @@
             <li><a href="#home" class="text-gray-400 hover:text-white transition-colors">首页</a></li>
             <li><a href="#videos" class="text-gray-400 hover:text-white transition-colors">视频</a></li>
             <li><a href="#gallery" class="text-gray-400 hover:text-white transition-colors">图片</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">关于我们</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">联系我们</a></li>
           </ul>
         </div>
         
@@ -230,17 +265,7 @@
             </li>
           </ul>
         </div>
-        
-        <div>
-          <h3 class="text-lg font-semibold mb-6">订阅更新</h3>
-          <p class="text-gray-400 mb-4">订阅我们的通讯，获取最新的视频和图片内容</p>
-          <form class="flex">
-            <input type="email" placeholder="您的邮箱地址" class="px-4 py-2 rounded-l-full bg-gray-800 border-0 focus:outline-none focus:ring-2 focus:ring-primary text-white w-full">
-            <button type="submit" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-r-full transition-colors">
-              <i class="fa fa-paper-plane"></i>
-            </button>
-          </form>
-        </div>
+      
       </div>
       
       <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500 text-sm">
@@ -318,20 +343,39 @@
       </div>
     </div>
   </div>
+  
+  <!-- 音频播放模态框 -->
+  <div id="audio-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center modal-transition opacity-0 pointer-events-none">
+    <div class="relative w-full max-w-4xl max-h-[90vh]">
+      <button id="close-audio-modal" class="absolute top-4 right-4 text-white text-2xl z-10 hover:text-gray-300 transition-colors">
+        <i class="fa fa-times"></i>
+      </button>
 
+      <!-- 音频播放器 -->
+      <div class="bg-white p-6 rounded-lg shadow-2xl">
+        <h3 id="audio-modal-title" class="text-xl font-bold mb-2">音频标题</h3>
+        <p id="audio-modal-description" class="text-gray-600 mb-4">音频描述</p>
+        <audio id="audio-player" controls class="w-full"></audio>
+        <div class="flex flex-wrap gap-2">
+          <span id="audio-modal-date" class="text-sm text-gray-500"><i class="fa fa-calendar mr-1"></i> 日期</span>
+          <span id="audio-modal-views" class="text-sm text-gray-500"><i class="fa fa-eye mr-1"></i> 收听次数</span>
+        </div>
+      </div>
+    </div>
+  </div>
   <script>
     // 视频数据配置
     const videoData = [
       {
         id: 1,
-        title: "放烟花了",
-        description: "我们一起放烟花",
+        title: "新产品发布会",
+        description: "我们最新产品的详细介绍，展示了产品的主要功能和创新点。",
         thumbnail: "https://picsum.photos/id/96/800/450",
         duration: "03:45",
         date: "2025-06-10",
         views: "12,543",
         category: "产品介绍",
-        videoUrl: "https://cian66.oss-cn-beijing.aliyuncs.com/display/video/flower.mp4"
+        videoUrl: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
       },
       {
         id: 2,
@@ -394,10 +438,10 @@
     const imageData = [
       {
         id: 1,
-        title: "样式样式",
-        description: "实例实例实例。",
-        thumbnail: "https://cian66.oss-cn-beijing.aliyuncs.com/display/image/demo.jpg",
-        fullsize: "https://cian66.oss-cn-beijing.aliyuncs.com/display/image/demo.jpg",
+        title: "产品全景展示",
+        description: "我们最新产品的全景展示，呈现了产品的整体外观和设计理念。",
+        thumbnail: "https://picsum.photos/id/26/800/600",
+        fullsize: "https://picsum.photos/id/26/1200/800",
         category: "产品图片"
       },
       {
@@ -481,6 +525,91 @@
         category: "应用场景"
       }
     ];
+	
+	// 音频数据配置
+    const audioData = [
+      {
+        id: 1,
+        title: "产品介绍音频 1",
+        description: "详细介绍产品的特点和优势",
+        date: "2025-07-10",
+        views: "5,234",
+        category: "产品介绍音频",
+        audioUrl: "https://cian66.oss-cn-beijing.aliyuncs.com/display/audio/demo.MP3" // 替换为实际的音频链接
+      },
+      {
+        id: 2,
+        title: "宣传音频 1",
+        description: "宣传公司的最新活动和优惠",
+        date: "2025-07-05",
+        views: "3,456",
+        category: "宣传音频",
+        audioUrl: "https://example.com/audio2.mp3" // 替换为实际的音频链接
+      },
+      {
+        id: 3,
+        title: "产品介绍音频 2",
+        description: "深入剖析产品的功能和用途",
+        date: "2025-06-25",
+        views: "4,123",
+        category: "产品介绍音频",
+        audioUrl: "https://example.com/audio3.mp3" // 替换为实际的音频链接
+      },
+      {
+        id: 4,
+        title: "宣传音频 2",
+        description: "推广公司的特色服务",
+        date: "2025-06-20",
+        views: "2,890",
+        category: "宣传音频",
+        audioUrl: "https://example.com/audio4.mp3" // 替换为实际的音频链接
+      },
+      {
+        id: 5,
+        title: "产品介绍音频 3",
+        description: "讲解产品的技术亮点",
+        date: "2025-06-15",
+        views: "3,789",
+        category: "产品介绍音频",
+        audioUrl: "https://example.com/audio5.mp3" // 替换为实际的音频链接
+      },
+      {
+        id: 6,
+        title: "宣传音频 3",
+        description: "介绍公司的未来规划",
+        date: "2025-06-10",
+        views: "3,210",
+        category: "宣传音频",
+        audioUrl: "https://example.com/audio6.mp3" // 替换为实际的音频链接
+      },
+      {
+        id: 7,
+        title: "产品介绍音频 4",
+        description: "对比产品与竞品的优势",
+        date: "2025-06-05",
+        views: "2,567",
+        category: "产品介绍音频",
+        audioUrl: "https://example.com/audio7.mp3" // 替换为实际的音频链接
+      },
+      {
+        id: 8,
+        title: "宣传音频 4",
+        description: "宣传公司的企业文化",
+        date: "2025-05-30",
+        views: "2,123",
+        category: "宣传音频",
+        audioUrl: "https://example.com/audio8.mp3" // 替换为实际的音频链接
+      },
+      {
+        id: 9,
+        title: "产品介绍音频 5",
+        description: "介绍产品的使用方法",
+        date: "2025-05-25",
+        views: "1,987",
+        category: "产品介绍音频",
+        audioUrl: "https://example.com/audio9.mp3" // 替换为实际的音频链接
+      }
+    ];
 
     // 当前选中的图片索引
     let currentImageIndex = 0;
@@ -488,6 +617,8 @@
     // 视频和图片当前展示数量
     let currentVideoCount = 6;
     let currentImageCount = 6;
+	// 音频当前展示数量
+    let currentAudioCount = 6;
 
     // DOM元素
     const videoGrid = document.getElementById('video-grid');
@@ -506,6 +637,10 @@
     const imageTitle = document.getElementById('image-title');
     const imageDescription = document.getElementById('image-description');
     const imageIndex = document.getElementById('image-index');
+	const audioGrid = document.getElementById('audio-grid');
+    const audioModal = document.getElementById('audio-modal');
+    const closeAudioModal = document.getElementById('close-audio-modal');
+    const audioPlayer = document.getElementById('audio-player');
 
     // 导航栏滚动效果
     window.addEventListener('scroll', () => {
@@ -895,18 +1030,131 @@
       renderImages(filteredImages.slice(0, currentImageCount));
     });
 
+	
+   // 渲染音频卡片
+    function renderAudios(audios) {
+      audioGrid.innerHTML = audios.length > 0 ? '' : `
+        <div class="col-span-full text-center py-16">
+          <i class="fa fa-music text-gray-300 text-6xl mb-4"></i>
+          <p class="text-gray-500">未找到音频文件</p>
+        </div>
+      `;
+
+      audios.forEach(audio => {
+        const audioCard = document.createElement('div');
+        audioCard.className = 'video-card-hover bg-white rounded-xl overflow-hidden shadow-md';
+        audioCard.innerHTML = `
+          <div class="relative p-6 flex items-center space-x-4">
+            <i class="fa fa-music text-4xl text-primary"></i>
+            <div>
+              <h3 class="font-semibold text-xl mb-2">${audio.title}</h3>
+              <p class="text-gray-600 mb-4">${audio.description}</p>
+              <div class="flex justify-between items-center text-sm text-gray-500">
+                <span><i class="fa fa-calendar mr-1"></i> ${audio.date}</span>
+				&nbsp;
+				&nbsp;
+                <span><i class="fa fa-eye mr-1"></i> ${audio.views} 次收听</span>
+              </div>
+            </div>
+          </div>
+        `;
+
+        // 点击卡片打开音频模态框
+        audioCard.addEventListener('click', () => {
+          document.getElementById('audio-modal-title').textContent = audio.title;
+          document.getElementById('audio-modal-description').textContent = audio.description;
+          document.getElementById('audio-modal-date').innerHTML = `<i class="fa fa-calendar mr-1"></i> ${audio.date}`;
+          document.getElementById('audio-modal-views').innerHTML = `<i class="fa fa-eye mr-1"></i> ${audio.views} 次收听`;
+
+          audioPlayer.src = audio.audioUrl;
+
+          audioModal.classList.remove('opacity-0', 'pointer-events-none');
+          document.body.style.overflow = 'hidden';
+
+          // 音频加载完成后自动播放
+          audioPlayer.onloadedmetadata = () => {
+            audioPlayer.play().catch(e => console.log('自动播放被阻止:', e));
+          };
+        });
+
+        audioGrid.appendChild(audioCard);
+      });
+    }
+	// 音频筛选按钮
+    document.querySelectorAll('#audios .filter-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        // 移除所有按钮的活跃状态
+        document.querySelectorAll('#audios .filter-btn').forEach(btn => {
+          btn.classList.remove('active', 'bg-primary', 'text-white');
+          btn.classList.add('bg-gray-200', 'text-dark');
+        });
+
+        // 添加当前按钮的活跃状态
+        button.classList.add('active', 'bg-primary', 'text-white');
+        button.classList.remove('bg-gray-200', 'text-dark');
+
+        // 筛选音频
+        const filter = button.textContent.trim();
+        let filteredAudios = audioData;
+
+        if (filter !== '全部音频') {
+          filteredAudios = audioData.filter(audio => audio.category === filter);
+        }
+
+        currentAudioCount = 6;
+        renderAudios(filteredAudios.slice(0, currentAudioCount));
+        if (filteredAudios.length <= currentAudioCount) {
+          document.getElementById('load-more-audios').style.display = 'none';
+        } else {
+          document.getElementById('load-more-audios').style.display = 'inline-block';
+        }
+      });
+    });
+
+    // 关闭音频模态框
+    closeAudioModal.addEventListener('click', () => {
+      audioModal.classList.add('opacity-0', 'pointer-events-none');
+      document.body.style.overflow = '';
+      audioPlayer.pause();
+      audioPlayer.src = '';
+    });
+
+    // 点击模态框背景关闭
+    audioModal.addEventListener('click', (e) => {
+      if (e.target === audioModal) {
+        closeAudioModal.click();
+      }
+    });
+
+    // 加载更多音频按钮
+    document.getElementById('load-more-audios').addEventListener('click', () => {
+      const filteredAudios = document.querySelector('#audios .filter-btn.active').textContent.trim() === '全部音频' ? audioData : audioData.filter(audio => audio.category === document.querySelector('#audios .filter-btn.active').textContent.trim());
+      currentAudioCount += 3;
+      if (currentAudioCount >= filteredAudios.length) {
+        currentAudioCount = filteredAudios.length;
+        document.getElementById('load-more-audios').style.display = 'none';
+      }
+      renderAudios(filteredAudios.slice(0, currentAudioCount));
+    });
+
     // 初始化页面
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('load', () => {
       // 渲染视频和图片
       renderVideos(videoData.slice(0, currentVideoCount));
       renderImages(imageData.slice(0, currentImageCount));
-
+	  // 渲染音频
+      renderAudios(audioData.slice(0, currentAudioCount));
+      if (audioData.length <= currentAudioCount) {
+        document.getElementById('load-more-audios').style.display = 'none';
+      }
       if (videoData.length <= currentVideoCount) {
         document.getElementById('load-more-videos').style.display = 'none';
       }
+	  
       if (imageData.length <= currentImageCount) {
         document.getElementById('load-more-images').style.display = 'none';
       }
+	  
     });
   </script>
 </body>
